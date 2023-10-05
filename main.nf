@@ -1,16 +1,25 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-process helloworld {
-  input: 
-    val x
-  output:
-    stdout
-  script:
+process fastqc {
+
+    cpus 2
+    memory '12 MB'
+    container "/home/ubuntu/singularity-hpc"
+
+    input:
+    path "NA12877_R1_10k.fq.gz"
+
+    output:
+    path "results/*_fastqc.{zip,html}"
+
+    script:
     """
-    echo '$x world!'
+    #!/usr/bin/bash
+    fastqc -o results/ $input
     """
 }
+
 workflow {
-  Channel.of('Ciao', 'Hello', 'Hola') | helloworld | view
+    fastqc() | view
 }

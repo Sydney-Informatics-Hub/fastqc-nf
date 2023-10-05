@@ -6,3 +6,10 @@
 # Ignore generated folders
 results/
 work/
+
+# Ignore backup scripts
+main-1.nf
+main-2.nf
+
+# Ignore input data
+NA12877_R1_10k.fq.gz
