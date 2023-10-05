@@ -12,18 +12,11 @@ nextflow run main.nf
 
 For main-1.nf
 ```
-nextflow run main-1.nf
+nextflow run -e.mode=ciao main-1.nf
 ```
 
 For main-2.nf
 ```
-nextflow run -e.mode=ciao main-1.nf
+nextflow run main-2.nf
 ```
 
-## Additional notes
-
-## Help / FAQ / Troubleshooting
-
-## License(s)
-
-## Acknowledgements/citations/credits
