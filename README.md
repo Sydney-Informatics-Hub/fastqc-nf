@@ -27,41 +27,41 @@ This project comprises several stages:
 
 ## User guide
 
-### Data
+### 0_Data
 The test data is download from [bio-test-datasets](https://github.com/Sydney-Informatics-Hub/bio-test-datasets/tree/main#bio-test-datasets), which contains Paired-end Platinum Genomes fastq files for NA12877 subset to 10k reads. 
 
-### Set up
+### 1_Set up
 
  ```
  git clone https://github.com/Sydney-Informatics-Hub/fastqc-nf.git
 ```
 
-### Execution:
+### 2_Run:
 
-### For task_1_hello_world
+#### task_1_hello_world
 
-#### main-1-1.nf
+##### main-1-1.nf
 
 ```
- nextflow run main-1-1.nf
+ nextflow run ./task/main-1-1.nf
  ```
-#### main-1-2.nf
+##### main-1-2.nf
 
 ```
- nextflow run -e.mode=ciao main-1-2.nf
+ nextflow run -e.mode=ciao ./task/main-1-2.nf
 ```
-#### main-1-3.nf
+##### main-1-3.nf
 
 ```
- nextflow run main-1-3.nf
+ nextflow run ./task/main-1-3.nf
 ```
 
-### For task_2_fastq_1
+#### task_2_fastq_1
 
 main-2-1.nf
 
 ```
- nextflow run main-2-1.nf --fq NA12877_R1_10k.fq.gz --output results
+ nextflow run ./task/main-2-1.nf --fq ./data/NA12877_R1_10k.fq.gz --output results
 ```
 
 ## Acknowledgements
