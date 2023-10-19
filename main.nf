@@ -112,3 +112,17 @@ outDir      : ${params.outDir}
 println summary
 
 }
+
+process helloworld {
+  input: 
+    val x
+  output:
+    stdout
+  script:
+    """
+    echo '$x world!'
+    """
+}
+workflow {
+  Channel.of('Ciao', 'Hello', 'Hola') | helloworld | view
+}
