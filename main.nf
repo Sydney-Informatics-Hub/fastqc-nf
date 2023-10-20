@@ -82,9 +82,10 @@ if ( params.help || params.fq == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-params.fq = false
+fq = Channel.fromPath(params.fq)
 
-fastqc()
+// Execute fastqc 
+fastqc(fq)
 }}
 
 // Print workflow execution summary 
@@ -112,9 +113,11 @@ process fastqc {
     memory '12 GB'
     container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
 
-    input:
-    output: 
-    path "results/*_fastqc.{zip,html}"
+    input: 
+    path(params.fq)
+
+    output:
+    path "${params.output}/*_fastqc.{zip,html}"
 
     script:
     """
