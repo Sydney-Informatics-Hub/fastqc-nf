@@ -29,18 +29,18 @@ include { processTwo } from './modules/process2'
 log.info """\
 
 =======================================================================================
-Name of the pipeline - fastqc_nf 
+F A S T Q C - N F  
 =======================================================================================
 
 Created by Ching-Yu Lu
-Find documentation @ https://sydney-informatics-hub.github.io/Nextflow_DSL2_template_guide/
+Find documentation @ https://github.com/Sydney-Informatics-Hub/fastqc-nf
 Cite this pipeline @ INSERT DOI
 
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.input}
-outDir      : ${params.outDir}
+input       : ${params.fq}
+outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
 
@@ -52,16 +52,15 @@ workDir     : ${workflow.workDir}
 
 def helpMessage() {
     log.info"""
-  Usage:  nextflow run main.nf --input <samples.tsv> 
+  Usage:  nextflow run main.nf --fq <fq file> --output <directory_name> 
 
   Required Arguments:
 
-  --input	Specify full path and name of sample
-		input file (tab separated).
+  --fq    Path to fq file to be processed. 
 
   Optional Arguments:
 
-  --outDir	Specify path to output directory. 
+  --output	Specify path to output directory. 
 	
 """
 }
@@ -86,14 +85,9 @@ if ( params.help || params.input == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-	input = Channel.value("${params.input}")
+params.fq = "*.fq.gz"
 
-// Run process 1 
-// See https://training.nextflow.io/basic_training/processes/#inputs 
-	processOne(input)
-	
-// Run process 2 which takes output of process 1 
-	processTwo(processOne.out.File)
+fastqc()
 }}
 
 // Print workflow execution summary 
@@ -112,31 +106,23 @@ outDir      : ${params.outDir}
 =======================================================================================
   """
 println summary
-
+}
 // ====================================================================================
-
-params.fq = "*.fq.gz"
 
 process fastqc {
     // Specify resouce allocation for this process
     cpus 2
     memory '12 GB'
-    // Point the location of specified container
     container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
 
     input:
-    output:
+    output: 
     path "results/*_fastqc.{zip,html}"
 
     script:
     """
-    #!/usr/bin/env bash
     fastqc -o results/ ${params.fq}
     """
-}
-
-workflow {
-    fastqc()
 }
 
 /*
