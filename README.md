@@ -6,21 +6,12 @@
  - [Acknowledgements](#acknowledgements)
 
 ## Description
-FastQC-nf is a pipeline designed to build a Nextflow workflow based on FastQC, a quality control software developed by [Babraham Bioinformatics](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). FastQC is utilized for assessing the quality of raw sequence data obtained from high-throughput sequencing pipelines. It is versatile, capable of analyzing both Illumina short reads and PacBio long reads. This project aims to help users become proficient in creating Nextflow workflows and applying them to their own projects.
 
-Nextflow is a powerful workflow orchestration engine and domain-specific language (DSL) that simplifies the creation of data-intensive computational workflows. In the field of bioinformatics, the output data can be extensive and often involves multiple programming languages, especially when working with next-generation sequencing pipelines. Nextflow provides consistency and reproducibility by leveraging containerization on various platforms.
+<p align="center">
+:wrench: This pipeline is currently under development :wrench:
+</p>
 
-Key features of Nextflow include:
-
-1. Workflow portability and reproducibility
-2. Scalability for parallelization and deployment
-3. Integration with existing tools, systems, and industry standards
-
-This project comprises several stages:
-
-1. Creating the initial "Hello World" script.
-2. Running FastQC on a single FASTQ file with the use of the --fq and --output parameters.
-3. Executing FastQC on multiple FASTQ files by specifying the --fq-dir and --output parameters.
+FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput sequencing reads. It employs [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to assess the quality of individual fastq files. FastQC metrics are then aggregated into a single HTML report using [MultiQC](https://multiqc.info/). This pipeline accepts both Illumina short read and PacBio long read datasets. 
 
 ## Diagram 
 ![diagram](workflow1-1.bmp)
