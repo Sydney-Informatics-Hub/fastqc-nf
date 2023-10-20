@@ -71,7 +71,7 @@ workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
 
-if ( params.help || params.input == false ){   
+if ( params.help || params.fq == false ){   
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
