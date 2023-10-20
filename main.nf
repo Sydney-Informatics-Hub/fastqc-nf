@@ -75,9 +75,6 @@ if ( params.help || params.fq == false ){
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
-	// consider adding some extra contigencies here.
-	// could validate path of all input files in list?
-	// could validate indexes for reference exist?
 
 // If none of the above are a problem, then run the workflow
 } else {
@@ -85,7 +82,7 @@ if ( params.help || params.fq == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-params.fq = "*.fq.gz"
+params.fq = false
 
 fastqc()
 }}
