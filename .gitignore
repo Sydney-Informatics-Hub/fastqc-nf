@@ -1,5 +1,5 @@
 # Ignore log file
-.nextflow.log
+.nextflow.log*
 .nextflow/
 .nextflow/history
 nextflow.config
