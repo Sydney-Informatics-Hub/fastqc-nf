@@ -2,7 +2,6 @@
 .nextflow.log*
 .nextflow/
 .nextflow/history
-nextflow.config
 
 # Ignore generated folders
 results/
