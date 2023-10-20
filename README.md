@@ -18,12 +18,21 @@ FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput s
 
 ## User guide
 
-### 0_Data
-The test data is download from [bio-test-datasets](https://github.com/Sydney-Informatics-Hub/bio-test-datasets/tree/main#bio-test-datasets), which contains Paired-end Platinum Genomes fastq files for NA12877 subset to 10k reads. 
+### Set up 
 
-### 1_Set up
+Under development.
 
- ```
+#### Download test data 
+
+Note: using subset fastqs from [bio-test-datasets](https://github.com/Sydney-Informatics-Hub/bio-test-datasets/tree/main#bio-test-datasets) for testing and development. Download data by running: 
+
+```
+ git clone https://github.com/Sydney-Informatics-Hub/bio-test-datasets.git
+```
+
+#### Download workflow code 
+
+```
  git clone https://github.com/Sydney-Informatics-Hub/fastqc-nf.git
 ```
 
