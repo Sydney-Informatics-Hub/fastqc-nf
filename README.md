@@ -22,47 +22,40 @@ FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput s
 
 Under development.
 
+#### Install Nextflow and Singularity
+
+To run this pipeline you must have Nextflow (>=20.07.1) and Singularity installed on your machine. All tools are run using containers. 
+
+* [Nextflow installation instructions](https://www.nextflow.io/docs/latest/getstarted.html)
+* [Singularity installation instructions](https://docs.sylabs.io/guides/3.0/user-guide/installation.html)
+
 #### Download test data 
 
 Note: using subset fastqs from [bio-test-datasets](https://github.com/Sydney-Informatics-Hub/bio-test-datasets/tree/main#bio-test-datasets) for testing and development. Download data by running: 
 
 ```
- git clone https://github.com/Sydney-Informatics-Hub/bio-test-datasets.git
+git clone https://github.com/Sydney-Informatics-Hub/bio-test-datasets.git
 ```
 
 #### Download workflow code 
+
+Download the code contained in this repository with:
 
 ```
  git clone https://github.com/Sydney-Informatics-Hub/fastqc-nf.git
 ```
 
-### 2_Run:
+### Execute the workflow 
 
-#### task_1_hello_world
-
-##### main-1-1.nf
+You will need to execute this workflow from inside the `fastqc-nf` directory. Execute the workflow using the command below: 
 
 ```
- nextflow run ./task/main-1-1.nf
- ```
-##### main-1-2.nf
-
-```
- nextflow run -e.mode=ciao ./task/main-1-2.nf
-```
-##### main-1-3.nf
-
-```
- nextflow run ./task/main-1-3.nf
+nextflow run main.nf --fq /path/to/bio-test-datasets/fastq/NA12877_R1_10k.fq.gz --output <specify_outdir>
 ```
 
-#### task_2_fastq_1
-
-main-2-1.nf
-
-```
- nextflow run ./task/main-2-1.nf --fq ./data/NA12877_R1_10k.fq.gz --output results
-```
+Before running, adjust the following flags:
+* `--fq` specify the full path to a fastq file (i.e. `NA12877_R1_10k.fq.gz`)
+* `--output` name a directory to output the fastqc files to
 
 ## Acknowledgements
 The authors acknowledge the technical assistance provided by the Sydney Informatics Hub (SIH), a Core Research Facility of the University of Sydney and the Australian BioCommons.
