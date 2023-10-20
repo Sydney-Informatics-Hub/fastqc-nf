@@ -7,4 +7,3 @@ nextflow.config
 # Ignore generated folders
 results/
 work/
-
