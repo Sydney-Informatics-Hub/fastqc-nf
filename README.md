@@ -23,7 +23,7 @@ This project comprises several stages:
 3. Executing FastQC on multiple FASTQ files by specifying the --fq-dir and --output parameters.
 
 ## Diagram 
-![diagram](workflow1.bmp)
+![diagram](workflow1-1.bmp)
 
 ## User guide
 
