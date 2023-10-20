@@ -8,3 +8,4 @@ nextflow.config
 results/
 work/
 data/
+bio-test-datasets/
