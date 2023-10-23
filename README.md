@@ -64,4 +64,5 @@ Before running, adjust the following flags:
 * `--output` name a directory to output the fastqc files to
 
 ## Acknowledgements
+
 The authors acknowledge the technical assistance provided by the Sydney Informatics Hub (SIH), a Core Research Facility of the University of Sydney and the Australian BioCommons.
