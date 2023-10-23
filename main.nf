@@ -112,16 +112,17 @@ process fastqc {
     cpus 2
     memory '12 GB'
     container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
+    publishDir "${params.output}", mode: 'symlink'
 
     input: 
     path(params.fq)
 
     output:
-    path "${params.output}/*_fastqc.{zip,html}"
+    path("*")
 
     script:
     """
-    fastqc -o results/ ${params.fq}
+    fastqc ${params.fq} 
     """
 }
 
