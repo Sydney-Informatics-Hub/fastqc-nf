@@ -14,7 +14,7 @@
 FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput sequencing reads. It employs [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to assess the quality of individual fastq files. FastQC metrics are then aggregated into a single HTML report using [MultiQC](https://multiqc.info/). This pipeline accepts both Illumina short read and PacBio long read datasets. 
 
 ## Diagram 
-![diagram](workflow1-1.bmp)
+![diagram](fastqcnf_wf.bmp)
 
 ## User guide
 

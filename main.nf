@@ -82,10 +82,10 @@ if ( params.help || params.fq == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-fq = Channel.fromPath(params.fq)
+fq_ch = Channel.fromPath(params.fq)
 
 // Execute fastqc 
-fastqc(fq)
+fastqc(fq_ch)
 }}
 
 // Print workflow execution summary 
@@ -115,24 +115,14 @@ process fastqc {
     publishDir "${params.output}", mode: 'symlink'
 
     input: 
-    path(params.fq)
+    path fq
 
     output:
-    path("*")
+    path "*_fastqc.{zip,html}"
 
     script:
     """
-    fastqc ${params.fq} 
+    #!/usr/bin/env bash
+    fastqc ${fq} 
     """
 }
-
-/*
-search for the fastqc biocontainer in https://quay.io/ and provide to container scope i.e:
-container "quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0" 
-Nextflow will pull a container for you automatically when you run a workflow
-TODO later look at what to do about pulling containers when your job has no external network access
-When using Singularity to manage containers with nextflow, dont need to clarify it is a docker container. For example when pulling a Docker container with Singularity normally you would use:
-singularity pull docker://quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0
-                                                    ~ Georgie 18102023
-
-*/
