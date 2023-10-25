@@ -1,5 +1,9 @@
 # Ignore log file
+<<<<<<< HEAD
 .nextflow.log
+=======
+.nextflow.log*
+>>>>>>> fastqc2
 .nextflow/
 .nextflow/history
 
@@ -7,5 +11,9 @@
 results/
 work/
 data/
+<<<<<<< HEAD
 
 NA12877_R1_10k.fq.gz
+=======
+bio-test-datasets/
+>>>>>>> fastqc2
