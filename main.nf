@@ -112,6 +112,7 @@ process fastqc {
     cpus 2
     memory '12 GB'
     container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
+    // you have to set up publishDir. otherwise, nextflow only show the results in the work directory
     publishDir "${params.output}", mode: 'symlink'
 
     input: 
@@ -125,4 +126,5 @@ process fastqc {
     #!/usr/bin/env bash
     fastqc ${fq} 
     """
+  // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }
