@@ -1,16 +1,5 @@
 # FastQC-nf bioinformatics workflow
 
-<<<<<<< HEAD
-## Description
-FastQC-nf is a pipeline for quality control in both illumina short reads and Pacbio long reads. 
-It's written in nextflow workflow. 
-
-## Run Scripts
-For main.nf
-```
-nextflow run main.nf
-```
-=======
  - [Description](#description)
  - [User Guide](#user-guide)
  - [Additional notes](#additional-notes)
@@ -26,20 +15,12 @@ FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput s
 
 ## Diagram 
 ![diagram](fastqcnf_wf.bmp)
->>>>>>> fastqc2
 
 For main-1.nf
 ```
 nextflow run -e.mode=ciao main-1.nf
 ```
 
-<<<<<<< HEAD
-For main-2.nf
-```
-nextflow run main-2.nf
-```
-
-=======
 ### Set up 
 
 Under development.
@@ -88,4 +69,3 @@ Before running, adjust the following flags:
 ## Acknowledgements
 
 The authors acknowledge the technical assistance provided by the Sydney Informatics Hub (SIH), a Core Research Facility of the University of Sydney and the Australian BioCommons.
->>>>>>> fastqc2
