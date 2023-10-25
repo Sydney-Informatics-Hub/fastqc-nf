@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-/// To use DSL-2 will need to include this
+// To use DSL-2 will need to include this
 nextflow.enable.dsl=2
 
 // =================================================================
@@ -20,25 +20,27 @@ nextflow.enable.dsl=2
 // Import processes or subworkflows to be run in the workflow
 // Each of these is a separate .nf script saved in modules/ directory
 // See https://training.nextflow.io/basic_training/modules/#importing-modules 
+/*
 include { processOne } from './modules/process1'
 include { processTwo } from './modules/process2' 
+*/
 
 // Print a header for your pipeline 
 log.info """\
 
 =======================================================================================
-Name of the pipeline - nf 
+F A S T Q C - N F  
 =======================================================================================
 
-Created by <YOUR NAME> 
-Find documentation @ https://sydney-informatics-hub.github.io/Nextflow_DSL2_template_guide/
+Created by Ching-Yu Lu
+Find documentation @ https://github.com/Sydney-Informatics-Hub/fastqc-nf
 Cite this pipeline @ INSERT DOI
 
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.input}
-outDir      : ${params.outDir}
+input       : ${params.fq}
+outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
 
@@ -50,18 +52,17 @@ workDir     : ${workflow.workDir}
 
 def helpMessage() {
     log.info"""
-  Usage:  nextflow run main.nf --input <samples.tsv> 
+  Usage:  nextflow run main.nf --fq <fq file> --output <directory_name> 
 
   Required Arguments:
 
-  --input	Specify full path and name of sample
-		input file (tab separated).
+  --fq    Path to fq file to be processed. 
 
   Optional Arguments:
 
-  --outDir	Specify path to output directory. 
+  --output	Specify path to output directory. 
 	
-""".stripIndent()
+"""
 }
 
 // Define workflow structure. Include some input/runtime tests here.
@@ -70,13 +71,10 @@ workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
 
-if ( params.help || params.input == false ){   
+if ( params.help || params.fq == false ){   
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
-	// consider adding some extra contigencies here.
-	// could validate path of all input files in list?
-	// could validate indexes for reference exist?
 
 // If none of the above are a problem, then run the workflow
 } else {
@@ -84,14 +82,10 @@ if ( params.help || params.input == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-	input = Channel.value("${params.input}")
+fq_ch = Channel.fromPath(params.fq)
 
-// Run process 1 
-// See https://training.nextflow.io/basic_training/processes/#inputs 
-	processOne(input)
-	
-// Run process 2 which takes output of process 1 
-	processTwo(processOne.out.File)
+// Execute fastqc 
+fastqc(fq_ch)
 }}
 
 // Print workflow execution summary 
@@ -105,24 +99,32 @@ Duration    : ${workflow.duration}
 Success     : ${workflow.success}
 workDir     : ${workflow.workDir}
 Exit status : ${workflow.exitStatus}
-outDir      : ${params.outDir}
+outDir      : ${params.output}
 
 =======================================================================================
   """
 println summary
-
 }
+// ====================================================================================
 
-process helloworld {
-  input: 
-    val x
-  output:
-    stdout
-  script:
+process fastqc {
+    // Specify resouce allocation for this process
+    cpus 2
+    memory '12 GB'
+    container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
+    // you have to set up publishDir. otherwise, nextflow only show the results in the work directory
+    publishDir "${params.output}", mode: 'symlink'
+
+    input: 
+    path fq
+
+    output:
+    path "*_fastqc.{zip,html}"
+
+    script:
     """
-    echo '$x world!'
+    #!/usr/bin/env bash
+    fastqc ${fq} 
     """
-}
-workflow {
-  Channel.of('Ciao', 'Hello', 'Hola') | helloworld | view
+  // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }
