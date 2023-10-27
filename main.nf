@@ -39,7 +39,7 @@ Cite this pipeline @ INSERT DOI
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.fq}
+input       : ${params.fq_dir}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
@@ -52,11 +52,11 @@ workDir     : ${workflow.workDir}
 
 def helpMessage() {
     log.info"""
-  Usage:  nextflow run main.nf --fq <fq file> --output <directory_name> 
+  Usage:  nextflow run main.nf --fq-dir <fq directory> --output <directory_name> 
 
   Required Arguments:
 
-  --fq    Path to fq file to be processed. 
+  --fq_dir    Path to fq directory to be processed. 
 
   Optional Arguments:
 
@@ -71,7 +71,7 @@ workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
 
-if ( params.help || params.fq == false ){   
+if ( params.help || params.fq_dir == false ){   
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
@@ -85,7 +85,7 @@ if ( params.help || params.fq == false ){
 fq_ch = Channel.fromPath(params.fq)
 
 // Execute fastqc 
-fastqc(fq_ch)
+fastqc(params.fq_dir, fq_ch)
 }}
 
 // Print workflow execution summary 
@@ -116,6 +116,7 @@ process fastqc {
     publishDir "${params.output}", mode: 'symlink'
 
     input: 
+    path fq_dir
     path fq
 
     output:
@@ -124,7 +125,7 @@ process fastqc {
     script:
     """
     #!/usr/bin/env bash
-    fastqc ${fq} 
+    fastqc ${params.fq_dir}/${params.fq}
     """
   // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }
