@@ -39,7 +39,7 @@ Cite this pipeline @ INSERT DOI
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.fq_dir}
+input       : ${params.fq}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
@@ -71,7 +71,7 @@ workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
 
-if ( params.help || params.fq_dir == false ){   
+if ( params.help || params.fqs == false ){   
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
@@ -82,10 +82,10 @@ if ( params.help || params.fq_dir == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-fq_ch = Channel.fromPath(params.fq)
+fq_ch = Channel.fromPath(params.fqs)
 
-// Execute fastqc 
-fastqc(params.fq_dir, fq_ch)
+// Execute fastqc
+fastqc(fq_ch)
 }}
 
 // Print workflow execution summary 
@@ -116,7 +116,6 @@ process fastqc {
     publishDir "${params.output}", mode: 'symlink'
 
     input: 
-    path fq_dir
     path fq
 
     output:
@@ -125,7 +124,7 @@ process fastqc {
     script:
     """
     #!/usr/bin/env bash
-    fastqc ${params.fq_dir}/${params.fq}
+    fastqc ${fq}
     """
   // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }
