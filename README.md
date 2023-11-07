@@ -16,9 +16,9 @@ FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput s
 ## Diagram 
 ![diagram](fastqcnf_wf.bmp)
 
-For main-1.nf
+For main.nf
 ```
-nextflow run -e.mode=ciao main-1.nf
+nextflow run main.nf 
 ```
 
 ### Set up 

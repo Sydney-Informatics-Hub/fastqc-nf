@@ -39,7 +39,7 @@ Cite this pipeline @ INSERT DOI
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.fq}
+input       : ${params.fqs}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
@@ -83,6 +83,14 @@ if ( params.help || params.fqs == false ){
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
 fq_ch = Channel.fromPath(params.fqs)
+
+//dir_ch = Channel.fromPath("/scratch/nextflow/*", type: 'dir', glob: true, )
+//num_ch = Channel.fromlist(['NA', 'm'])
+//                .fromPath("/scratch/nextflow/*/$it*.fq.gz")
+//file_ch = Channel.fromPath("/scratch/nextflow/**/*.fq.gz")
+// pair_ch = Channel.fromPath("/scratch/nextflow/**/NA*_R{1,2}_10k.fq.gz", glob: true, checkIfExists: true, type: 'file')
+//html_ch = Channel.watchPath()
+
 
 // Execute fastqc
 fastqc(fq_ch)
