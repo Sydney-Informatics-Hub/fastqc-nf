@@ -82,7 +82,7 @@ if ( params.help || params.fqs == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-fq_ch = Channel.fromPath(params.fqs)
+fq_ch = Channel.fromFilePairs(params.fqs)
 
 //dir_ch = Channel.fromPath("/scratch/nextflow/*", type: 'dir', glob: true, )
 //num_ch = Channel.fromlist(['NA', 'm'])
@@ -121,18 +121,21 @@ process fastqc {
     memory '12 GB'
     container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
     // you have to set up publishDir. otherwise, nextflow only show the results in the work directory
-    publishDir "${params.output}", mode: 'symlink'
+    publishDir "${params.output}/${sample_id}", mode: 'symlink'
 
     input: 
-    path fq
+    tuple val(sample_id), path(fqs)
 
     output:
-    path "*_fastqc.{zip,html}"
+    path "${sample_id}_R1_10k_fastqc.html"
+    path "${sample_id}_R2_10k_fastqc.html"
 
     script:
     """
     #!/usr/bin/env bash
-    fastqc ${fq}
+    cd ${params.output}
+    mkdir ${sample_id}
+    fastqc ${fqs}
     """
   // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }

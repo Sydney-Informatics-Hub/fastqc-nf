@@ -53,17 +53,17 @@ Download the code contained in this repository with:
 You will need to execute this workflow from inside the `fastqc-nf` directory. Execute the workflow using the command below: 
 
 ```
-nextflow run main.nf --fq <provide path to fq file> --output <specify_outdir>
+nextflow run main.nf --fq_dir <provide path to fq directory> --output <specify output directory>
 ```
 
 For example: 
 
 ```
-nextflow run main.nf --fq bio-test-datasets/fastq/NA12877_R1_10k.fq.gz --output results
+nextflow run main.nf --fq_dir ../bio-data/fastq --output results
 ```
 
 Before running, adjust the following flags:
-* `--fq` specify the full path to a fastq file (i.e. `NA12877_R1_10k.fq.gz`)
+* `--fq_dir` specify the full path to the directory containing fastq files
 * `--output` name a directory to output the fastqc files to
 
 ## Acknowledgements
