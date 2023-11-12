@@ -48,6 +48,15 @@ Download the code contained in this repository with:
  git clone https://github.com/Sydney-Informatics-Hub/fastqc-nf.git
 ```
 
+#### Setup output directory
+
+Into fastqc-nf directory and create output directories. 
+
+```
+mkdir results | mkdir ./results/multiqc
+```
+
+
 ### Execute the workflow 
 
 You will need to execute this workflow from inside the `fastqc-nf` directory. Execute the workflow using the command below: 
