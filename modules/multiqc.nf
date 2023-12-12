@@ -1,5 +1,5 @@
 // Define the process
-process processTwo {
+process multiqc {
 	// Define directives 
 	// See: https://www.nextflow.io/docs/latest/process.html#directives
 	debug = true //turn to false to stop printing command stdout to screen

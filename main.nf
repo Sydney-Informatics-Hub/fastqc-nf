@@ -20,13 +20,22 @@ nextflow.enable.dsl=2
 // Import processes or subworkflows to be run in the workflow
 // Each of these is a separate .nf script saved in modules/ directory
 // See https://training.nextflow.io/basic_training/modules/#importing-modules 
-/*
-include { processOne } from './modules/process1'
-include { processTwo } from './modules/process2' 
-*/
+
+include { fastqc  } from './modules/fastqc'
+include { multiqc } from './modules/multiqc' 
 
 // Print a header for your pipeline 
 log.info """\
+
+
+ -._    _.--'"`'--._    _.--'"`'--._    _.--'"`'--._    _  
+    '-:`.'|`|"':-.  '-:`.'|`|"':-.  '-:`.'|`|"':-.  '.` :    
+  '.  '.  | |  | |'.  '.  | |  | |'.  '.  | |  | |'.  '.:    
+  : '.  '.| |  | |  '.  '.| |  | |  '.  '.| |  | |  '.  '.  
+  '   '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.  
+         `-..,..-'       `-..,..-'       `-..,..-'       `       
+
+Version 1.0
 
 =======================================================================================
 F A S T Q C - N F  
@@ -39,7 +48,7 @@ Cite this pipeline @ INSERT DOI
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.fqs}
+input       : ${params.input}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
@@ -52,11 +61,11 @@ workDir     : ${workflow.workDir}
 
 def helpMessage() {
     log.info"""
-  Usage:  nextflow run main.nf --fq-dir <fq directory> --output <directory_name> 
+  Usage:  nextflow run main.nf --input <full path> --output <directory_name> 
 
   Required Arguments:
 
-  --fq_dir    Path to fq directory to be processed. 
+  --input    Full path and name of sample input file (tsv format)
 
   Optional Arguments:
 
@@ -67,6 +76,7 @@ def helpMessage() {
 
 // Define workflow structure. Include some input/runtime tests here.
 // See https://www.nextflow.io/docs/latest/dsl2.html?highlight=workflow#workflow
+
 workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
@@ -78,22 +88,24 @@ if ( params.help || params.fqs == false ){
 
 // If none of the above are a problem, then run the workflow
 } else {
-	
+
+// Check inputs file exists
+	checkInputs(Channel.fromPath(params.input, checkIfExists: true))
+
+	// Split cohort file to collect info for each sample
+	input = checkInputs.out
+		.splitCsv(header: true, sep:"\t")
+		.map { row -> tuple(row.sampleID, file(row.read1), file(row.read2))}
+
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
 fq_ch = Channel.fromFilePairs(params.fqs)
 
-//dir_ch = Channel.fromPath("/scratch/nextflow/*", type: 'dir', glob: true, )
-//num_ch = Channel.fromlist(['NA', 'm'])
-//                .fromPath("/scratch/nextflow/*/$it*.fq.gz")
-//file_ch = Channel.fromPath("/scratch/nextflow/**/*.fq.gz")
-// pair_ch = Channel.fromPath("/scratch/nextflow/**/NA*_R{1,2}_10k.fq.gz", glob: true, checkIfExists: true, type: 'file')
-//html_ch = Channel.watchPath()
-
 
 // Execute fastqc
 fastqc(fq_ch)
+
 }}
 
 // Print workflow execution summary 
@@ -112,30 +124,4 @@ outDir      : ${params.output}
 =======================================================================================
   """
 println summary
-}
-// ====================================================================================
-
-process fastqc {
-    // Specify resouce allocation for this process
-    cpus 2
-    memory '12 GB'
-    container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
-    // you have to set up publishDir. otherwise, nextflow only show the results in the work directory
-    publishDir "${params.output}/${sample_id}", mode: 'symlink'
-
-    input: 
-    tuple val(sample_id), path(fqs)
-
-    output:
-    path "${sample_id}_R1_10k_fastqc.html"
-    path "${sample_id}_R2_10k_fastqc.html"
-
-    script:
-    """
-    #!/usr/bin/env bash
-    cd ${params.output}
-    mkdir ${sample_id}
-    fastqc ${fqs}
-    """
-  // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }
