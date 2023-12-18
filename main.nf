@@ -21,6 +21,7 @@ nextflow.enable.dsl=2
 // Each of these is a separate .nf script saved in modules/ directory
 // See https://training.nextflow.io/basic_training/modules/#importing-modules 
 
+include { checkInputs } from './modules/check_cohort'
 include { fastqc  } from './modules/fastqc'
 include { multiqc } from './modules/multiqc' 
 
@@ -65,7 +66,7 @@ def helpMessage() {
 
   Required Arguments:
 
-  --input    Full path and name of sample input file (tsv format)
+  --input   Full path and name of sample input file (tsv format)
 
   Optional Arguments:
 
@@ -81,7 +82,7 @@ workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
 
-if ( params.help || params.fqs == false ){   
+if ( params.help || params.input == false ){   
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
@@ -100,11 +101,11 @@ if ( params.help || params.fqs == false ){
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-fq_ch = Channel.fromFilePairs(params.fqs)
 
 
 // Execute fastqc
-fastqc(fq_ch)
+	fastqc(input)
+	multiqc(fastqc.out[0].collect(),fastqc.out[1].collect(),input)
 
 }}
 
