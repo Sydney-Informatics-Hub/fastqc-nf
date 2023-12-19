@@ -94,7 +94,7 @@ if ( params.help || params.input == false ){
 	checkInputs(Channel.fromPath(params.input, checkIfExists: true))
 
 	// Split cohort file to collect info for each sample
-	input = checkInputs.out
+	inputs = checkInputs.out
 		.splitCsv(header: true, sep:"\t")
 		.map { row -> tuple(row.sampleID, file(row.read1), file(row.read2))}
 
@@ -104,8 +104,8 @@ if ( params.help || params.input == false ){
 
 
 // Execute fastqc
-	fastqc(input)
-	multiqc(fastqc.out[0].collect(),fastqc.out[1].collect(),input)
+	fastqc(inputs)
+	multiqc(fastqc.out[1].collect(),inputs)
 
 }}
 

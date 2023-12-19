@@ -9,22 +9,19 @@ process multiqc {
 	// See: https://www.nextflow.io/docs/latest/process.html#inputs
 	input:
 	path ('*')
-	path ('*')
 	tuple val(sampleID), path(read1), path(read2)
 
 	// Define output(s)
 	// See: https://www.nextflow.io/docs/latest/process.html#outputs
 	output:
-	path 'multiqc_report.html'
-	path 'multiqc_data'
+	path ('multiqc_report.html')
+	path ('multiqc_data')
 
 	// Define code to execute 
 	// See: https://www.nextflow.io/docs/latest/process.html#script
 	script:
 	"""
-	cd ${params.output}
-
-    multiqc ./*/*
+	multiqc .
 
 	"""
  }
