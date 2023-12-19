@@ -20,13 +20,23 @@ nextflow.enable.dsl=2
 // Import processes or subworkflows to be run in the workflow
 // Each of these is a separate .nf script saved in modules/ directory
 // See https://training.nextflow.io/basic_training/modules/#importing-modules 
-/*
-include { processOne } from './modules/process1'
-include { processTwo } from './modules/process2' 
-*/
+
+include { checkInputs } from './modules/check_cohort'
+include { fastqc  } from './modules/fastqc'
+include { multiqc } from './modules/multiqc' 
 
 // Print a header for your pipeline 
 log.info """\
+
+
+ -._    _.--'"`'--._    _.--'"`'--._    _.--'"`'--._    _  
+    '-:`.'|`|"':-.  '-:`.'|`|"':-.  '-:`.'|`|"':-.  '.` :    
+  '.  '.  | |  | |'.  '.  | |  | |'.  '.  | |  | |'.  '.:    
+  : '.  '.| |  | |  '.  '.| |  | |  '.  '.| |  | |  '.  '.  
+  '   '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.  
+         `-..,..-'       `-..,..-'       `-..,..-'       `       
+
+Version 1.0
 
 =======================================================================================
 F A S T Q C - N F  
@@ -39,7 +49,7 @@ Cite this pipeline @ INSERT DOI
 =======================================================================================
 Workflow run parameters 
 =======================================================================================
-input       : ${params.fq}
+input       : ${params.input}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
@@ -52,11 +62,11 @@ workDir     : ${workflow.workDir}
 
 def helpMessage() {
     log.info"""
-  Usage:  nextflow run main.nf --fq <fq file> --output <directory_name> 
+  Usage:  nextflow run main.nf --input <full path> --output <directory_name> 
 
   Required Arguments:
 
-  --fq    Path to fq file to be processed. 
+  --input   Full path and name of sample input file (tsv format)
 
   Optional Arguments:
 
@@ -67,25 +77,36 @@ def helpMessage() {
 
 // Define workflow structure. Include some input/runtime tests here.
 // See https://www.nextflow.io/docs/latest/dsl2.html?highlight=workflow#workflow
+
 workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
 
-if ( params.help || params.fq == false ){   
+if ( params.help || params.input == false ){   
 // Invoke the help function above and exit
 	helpMessage()
 	exit 1
 
 // If none of the above are a problem, then run the workflow
 } else {
-	
+
+// Check inputs file exists
+	checkInputs(Channel.fromPath(params.input, checkIfExists: true))
+
+	// Split cohort file to collect info for each sample
+	inputs = checkInputs.out
+		.splitCsv(header: true, sep:"\t")
+		.map { row -> tuple(row.sampleID, file(row.read1), file(row.read2))}
+
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels
 // See https://training.nextflow.io/basic_training/channels/ 
-fq_ch = Channel.fromPath(params.fq)
 
-// Execute fastqc 
-fastqc(fq_ch)
+
+// Execute fastqc
+	fastqc(inputs)
+	multiqc(fastqc.out[1].collect(),inputs)
+
 }}
 
 // Print workflow execution summary 
@@ -104,27 +125,4 @@ outDir      : ${params.output}
 =======================================================================================
   """
 println summary
-}
-// ====================================================================================
-
-process fastqc {
-    // Specify resouce allocation for this process
-    cpus 2
-    memory '12 GB'
-    container 'quay.io/biocontainers/fastqc:0.12.1--hdfd78af_0'
-    // you have to set up publishDir. otherwise, nextflow only show the results in the work directory
-    publishDir "${params.output}", mode: 'symlink'
-
-    input: 
-    path fq
-
-    output:
-    path "*_fastqc.{zip,html}"
-
-    script:
-    """
-    #!/usr/bin/env bash
-    fastqc ${fq} 
-    """
-  // If you put -o for fastqc, it will end up error and with conflict against publishDir
 }
