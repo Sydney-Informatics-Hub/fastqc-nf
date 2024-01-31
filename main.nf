@@ -96,7 +96,7 @@ if ( params.help || params.input == false ){
 	// Split cohort file to collect info for each sample
 	inputs = checkInputs.out
 		.splitCsv(header: true, sep:"\t")
-		.map { row -> tuple(row.sampleID, file(row.read1), file(row.read2))}
+		.map { row -> tuple(row.sampleID, file(row.read))}
 
 // Define channels 
 // See https://www.nextflow.io/docs/latest/channel.html#channels

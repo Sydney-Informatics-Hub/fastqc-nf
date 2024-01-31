@@ -48,12 +48,12 @@ To run this pipeline you will need the following inputs:
 * Input sample sheet
 
 You will need to create a sample sheet with information about the samples you are processing, before running the pipeline. 
-This file must be **tab-separated** and contain a header and one row per sample. Columns should correspond to sampleID, read1, read2 files:
+This file must be **tab-separated** and contain a header and one row per sample. Columns should correspond to sampleID and read location:
 
-|sampleID|read1                      |read2                      |
-|--------|---------------------------|---------------------------|
-|SAMPLE1 |/scratch/fq/sample1.1.fq.gz|/scratch/fq/sample1.2.fq.gz|
-|SAMPLE2 |/scratch/fq/sample2.1.fq.gz|/scratch/fq/sample2.2.fq.gz|
+|sampleID|read                       |
+|--------|---------------------------|
+|SAMPLE1 |/scratch/fq/sample1.1.fq.gz|
+|SAMPLE2 |/scratch/fq/sample2.1.fq.gz|
 
 When you run the pipeline, you will use the mandatory `--input` parameter to specify the location and name of the input file:
 
@@ -95,6 +95,17 @@ nextflow run main.nf --input ../bio-data/fastq/input.tsv
 Before running, adjust the following flags:
 * `--input` specify the full path to the input.tsv
 * `--output` name a directory to output the fastqc files to
+
+### Attention
+
+In some dataset, when you perform fastqc, it may come up 
+```
+java.lang.OutOfMemoryError: Java heap space
+```
+You can add a -t 2 flag in fastqc. [issue86](https://github.com/s-andrews/FastQC/issues/86)
+```
+fastqc -t 2 ${read}
+```
 
 ## Acknowledgements
 

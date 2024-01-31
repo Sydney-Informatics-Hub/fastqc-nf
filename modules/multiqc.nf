@@ -9,7 +9,7 @@ process multiqc {
 	// See: https://www.nextflow.io/docs/latest/process.html#inputs
 	input:
 	path ('*')
-	tuple val(sampleID), path(read1), path(read2)
+	tuple val(sampleID), path(read)
 
 	// Define output(s)
 	// See: https://www.nextflow.io/docs/latest/process.html#outputs

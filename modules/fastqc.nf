@@ -7,7 +7,7 @@ process fastqc {
     publishDir "${params.output}/${sampleID}", mode: 'copy'
 
     input: 
-    tuple val(sampleID), path(read1), path(read2)
+    tuple val(sampleID), path(read)
 
     output:
     path("${sampleID}*fastqc.html")
@@ -16,7 +16,7 @@ process fastqc {
     script:
     """
     mkdir ${sampleID}
-    fastqc ${read1} ${read2}
+    fastqc ${read}
 
     """
 }
