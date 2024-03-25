@@ -26,20 +26,10 @@ include { fastqc  } from './modules/fastqc'
 include { multiqc } from './modules/multiqc' 
 
 // Print a header for your pipeline 
-log.info """\
-
-
- -._    _.--'"`'--._    _.--'"`'--._    _.--'"`'--._    _  
-    '-:`.'|`|"':-.  '-:`.'|`|"':-.  '-:`.'|`|"':-.  '.` :    
-  '.  '.  | |  | |'.  '.  | |  | |'.  '.  | |  | |'.  '.:    
-  : '.  '.| |  | |  '.  '.| |  | |  '.  '.| |  | |  '.  '.  
-  '   '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.  
-         `-..,..-'       `-..,..-'       `-..,..-'       `       
-
-Version 1.0.0
+log.info """   
 
 =======================================================================================
-F A S T Q C - N F  
+F A S T Q C - N F  v.1.0.0
 =======================================================================================
 
 Created by Ching-Yu Lu, Sydney Informatics Hub, University of Sydney
@@ -52,13 +42,9 @@ input       : ${params.input}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
-
 """
 
 /// Help function 
-// This is an example of how to set out the help function that 
-// will be run if run command is incorrect or missing. 
-
 def helpMessage() {
     log.info"""
   Usage:  nextflow run main.nf --input <full path> --output <directory_name> 
@@ -98,7 +84,9 @@ if ( params.help || params.input == false ){
 
   // Execute fastqc
 	fastqc(inputs)
-	multiqc(fastqc.out[1].collect(),inputs)
+
+  // Generate multiqc report
+	multiqc(fastqc.out[1].collect())
 
 }}
 
