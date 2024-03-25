@@ -2,7 +2,7 @@
 
  - [Description](#description)
  - [User Guide](#user-guide)
- - [Additional notes](#additional-notes)
+ - [Workflow metadata](#Workflow-summaries)
  - [Acknowledgements](#acknowledgements)
 
 ## Description
@@ -18,9 +18,9 @@ When applying this pipeline to RNAseq data, please consider that the following m
 
 This is because we always expect to see a high level of duplication in RNAseq data. This is because there is much less RNA in biological tissues, than DNA, and so the same RNA molecules are sequenced many times. By chance, RNA will be fragmented at the same spot and sequenced many times. For DNA, the purpose of FastQC metrics is to check for technical biases in the library preparation and sequencing process, when the sequencer reads the same strands multiple times. 
 
-### Set up 
+## User guide
 
-#### 0. Install Nextflow and Singularity
+### 0. Install Nextflow and Singularity
 
 To run this pipeline you must have Nextflow (>=20.07.1) and Singularity installed on your machine. All tools are run using containers. 
 
@@ -45,12 +45,12 @@ git clone https://github.com/Sydney-Informatics-Hub/fastqc-nf.git
 This will create a directory with the following structure: 
 ```bash
 fastqc-nf/
-├── LICENSE
-├── README.md
 ├── config/
+├── LICENSE
 ├── main.nf
 ├── modules/
-└── nextflow.config
+├── nextflow.config
+└── README.md
 ```
 
 The important features are:
