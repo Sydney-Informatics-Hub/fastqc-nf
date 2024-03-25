@@ -78,13 +78,15 @@ To run this pipeline you will need the following inputs:
 * Input sample sheet
 
 You will need to create a sample sheet with information about the samples you are processing, before running the pipeline. 
-This file must be **comma-separated** and contain a header and one row per fastq pair. Columns should correspond to sample, path to fq1, path to fq2:
+This file must be **comma-separated** (.csv) and contain a header and one row per fastq pair. Columns should correspond to sample, path to fq1, path to fq2:
 
 ```csv
 sample,fq1,fq2
 SAMPLE1,/scratch/fq/sample1.1.fq.gz,/scratch/fq/sample1.2.fq.gz
 SAMPLE2,/scratch/fq/sample2.1.fq.gz,/scratch/fq/sample2.2.fq.gz
 ```
+
+For samples with multiple fq pairs, you can add additional rows to the samplesheet, specifying the same sample name in the `sample` column. All FastQC reports for the same sample will be aggregated in the same directory. You will be able to view the aggregated reports for each fastq read file in the `multiqc_report.html` file.
 
 When you run the pipeline, you will use the mandatory `--input` parameter to specify the location and name of the input file:
 
