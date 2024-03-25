@@ -65,11 +65,12 @@ def helpMessage() {
 
   Required Arguments:
 
-  --input   Full path and name of sample input file (tsv format)
+  --input   Full path and name of sample input file (csv format)
 
   Optional Arguments:
 
-  --output	Specify path to output directory. 
+  --output	      Specify path to output directory. 
+  --gadi_account  Specify Gadi account to use for job submission with gadi.config
 	
 """
 }
