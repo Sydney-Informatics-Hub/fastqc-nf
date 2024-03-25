@@ -26,25 +26,14 @@ include { fastqc  } from './modules/fastqc'
 include { multiqc } from './modules/multiqc' 
 
 // Print a header for your pipeline 
-log.info """\
-
-
- -._    _.--'"`'--._    _.--'"`'--._    _.--'"`'--._    _  
-    '-:`.'|`|"':-.  '-:`.'|`|"':-.  '-:`.'|`|"':-.  '.` :    
-  '.  '.  | |  | |'.  '.  | |  | |'.  '.  | |  | |'.  '.:    
-  : '.  '.| |  | |  '.  '.| |  | |  '.  '.| |  | |  '.  '.  
-  '   '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.  
-         `-..,..-'       `-..,..-'       `-..,..-'       `       
-
-Version 1.0
+log.info """   
 
 =======================================================================================
-F A S T Q C - N F  
+F A S T Q C - N F  v.1.0.0
 =======================================================================================
 
-Created by Ching-Yu Lu
+Created by Ching-Yu Lu, Sydney Informatics Hub, University of Sydney
 Find documentation @ https://github.com/Sydney-Informatics-Hub/fastqc-nf
-Cite this pipeline @ INSERT DOI
 
 =======================================================================================
 Workflow run parameters 
@@ -53,35 +42,30 @@ input       : ${params.input}
 outDir      : ${params.output}
 workDir     : ${workflow.workDir}
 =======================================================================================
-
 """
 
 /// Help function 
-// This is an example of how to set out the help function that 
-// will be run if run command is incorrect or missing. 
-
 def helpMessage() {
     log.info"""
   Usage:  nextflow run main.nf --input <full path> --output <directory_name> 
 
   Required Arguments:
 
-  --input   Full path and name of sample input file (tsv format)
+  --input   Full path and name of sample input file (csv format)
 
   Optional Arguments:
 
-  --output	Specify path to output directory. 
+  --output	      Specify path to output directory. 
+  --gadi_account  Specify Gadi account to use for job submission with gadi.config
 	
 """
 }
 
 // Define workflow structure. Include some input/runtime tests here.
 // See https://www.nextflow.io/docs/latest/dsl2.html?highlight=workflow#workflow
-
 workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
-
 if ( params.help || params.input == false ){   
 // Invoke the help function above and exit
 	helpMessage()
@@ -90,22 +74,19 @@ if ( params.help || params.input == false ){
 // If none of the above are a problem, then run the workflow
 } else {
 
-// Check inputs file exists
+  // Check inputs file exists
 	checkInputs(Channel.fromPath(params.input, checkIfExists: true))
 
 	// Split cohort file to collect info for each sample
 	inputs = checkInputs.out
-		.splitCsv(header: true, sep:"\t")
-		.map { row -> tuple(row.sampleID, file(row.read1), file(row.read2))}
+		.splitCsv(header: true)
+		.map { row -> tuple(row.sample, file(row.fq1), file(row.fq2))}
 
-// Define channels 
-// See https://www.nextflow.io/docs/latest/channel.html#channels
-// See https://training.nextflow.io/basic_training/channels/ 
-
-
-// Execute fastqc
+  // Execute fastqc
 	fastqc(inputs)
-	multiqc(fastqc.out[1].collect(),inputs)
+
+  // Generate multiqc report
+	multiqc(fastqc.out[1].collect())
 
 }}
 
