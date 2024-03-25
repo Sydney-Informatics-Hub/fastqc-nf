@@ -2,7 +2,7 @@
 
  - [Description](#description)
  - [User Guide](#user-guide)
- - [Additional notes](#additional-notes)
+ - [Workflow metadata](#Workflow-summaries)
  - [Acknowledgements](#acknowledgements)
 
 ## Description
