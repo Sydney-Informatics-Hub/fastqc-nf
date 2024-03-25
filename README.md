@@ -11,10 +11,16 @@
 :wrench: This pipeline is currently under development :wrench:
 </p>
 
-FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput sequencing reads. It employs [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to assess the quality of individual fastq files. FastQC metrics are then aggregated into a single HTML report using [MultiQC](https://multiqc.info/). This pipeline accepts both Illumina short read and PacBio long read datasets. 
+FastQC-nf is a Nextflow workflow for evaluating the quality of high-throughput sequencing reads. It employs [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) to assess the quality of individual fastq files. FastQC metrics are then aggregated into a single HTML report using [MultiQC](https://multiqc.info/). This pipeline accepts both Illumina short read datasets for WGS and RNAseq data. 
 
-## Diagram 
-![diagram](fastqcnf_wf.bmp)
+When applying this pipeline to RNAseq data, please consider that the following metrics will FAIL due to the following assumptions of FastQC: 
+
+* Per-base sequence content
+* Per-sequence GC content
+* Sequence duplication levels
+* Overrepresented srequences 
+
+This is because we always expect to see a high level of duplication in RNAseq data. This is because there is much less RNA in biological tissues, than DNA, and so the same RNA molecules are sequenced many times. By chance, RNA will be fragmented at the same spot and sequenced many times. For DNA, the purpose of FastQC metrics is to check for technical biases in the library preparation and sequencing process, when the sequencer reads the same strands multiple times. 
 
 For main.nf
 ```
@@ -23,7 +29,7 @@ nextflow run main.nf
 
 ### Set up 
 
-Under development.
+
 
 #### Install Nextflow and Singularity
 
@@ -44,16 +50,17 @@ git clone https://github.com/Sydney-Informatics-Hub/bio-test-datasets.git
 
 To run this pipeline you will need the following inputs:
 
-* fastq files
+* Fastq files 
 * Input sample sheet
 
 You will need to create a sample sheet with information about the samples you are processing, before running the pipeline. 
-This file must be **tab-separated** and contain a header and one row per sample. Columns should correspond to sampleID, read1, read2 files:
+This file must be **comma-separated** and contain a header and one row per sample. Columns should correspond to sampleID, read1, read2 files:
 
-|sampleID|read1                      |read2                      |
-|--------|---------------------------|---------------------------|
-|SAMPLE1 |/scratch/fq/sample1.1.fq.gz|/scratch/fq/sample1.2.fq.gz|
-|SAMPLE2 |/scratch/fq/sample2.1.fq.gz|/scratch/fq/sample2.2.fq.gz|
+```csv
+sample,fq1,fq2
+SAMPLE1,/scratch/fq/sample1.1.fq.gz,/scratch/fq/sample1.2.fq.gz
+SAMPLE2,/scratch/fq/sample2.1.fq.gz,/scratch/fq/sample2.2.fq.gz
+```
 
 When you run the pipeline, you will use the mandatory `--input` parameter to specify the location and name of the input file:
 
@@ -76,7 +83,6 @@ Into fastqc-nf directory and create output directories.
 ```
 mkdir results
 ```
-
 
 ### Execute the workflow 
 
