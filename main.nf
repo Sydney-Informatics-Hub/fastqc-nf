@@ -36,15 +36,14 @@ log.info """\
   '   '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.:_ | :_.' '.  `.  
          `-..,..-'       `-..,..-'       `-..,..-'       `       
 
-Version 1.0
+Version 1.0.0
 
 =======================================================================================
 F A S T Q C - N F  
 =======================================================================================
 
-Created by Ching-Yu Lu
+Created by Ching-Yu Lu, Sydney Informatics Hub, University of Sydney
 Find documentation @ https://github.com/Sydney-Informatics-Hub/fastqc-nf
-Cite this pipeline @ INSERT DOI
 
 =======================================================================================
 Workflow run parameters 
@@ -77,11 +76,9 @@ def helpMessage() {
 
 // Define workflow structure. Include some input/runtime tests here.
 // See https://www.nextflow.io/docs/latest/dsl2.html?highlight=workflow#workflow
-
 workflow {
 
 // Show help message if --help is run or (||) a required parameter (input) is not provided
-
 if ( params.help || params.input == false ){   
 // Invoke the help function above and exit
 	helpMessage()
@@ -90,20 +87,15 @@ if ( params.help || params.input == false ){
 // If none of the above are a problem, then run the workflow
 } else {
 
-// Check inputs file exists
+  // Check inputs file exists
 	checkInputs(Channel.fromPath(params.input, checkIfExists: true))
 
 	// Split cohort file to collect info for each sample
 	inputs = checkInputs.out
-		.splitCsv(header: true, sep:"\t")
-		.map { row -> tuple(row.sampleID, file(row.read1), file(row.read2))}
+		.splitCsv(header: true)
+		.map { row -> tuple(row.sample, file(row.fq1), file(row.fq2))}
 
-// Define channels 
-// See https://www.nextflow.io/docs/latest/channel.html#channels
-// See https://training.nextflow.io/basic_training/channels/ 
-
-
-// Execute fastqc
+  // Execute fastqc
 	fastqc(inputs)
 	multiqc(fastqc.out[1].collect(),inputs)
 
