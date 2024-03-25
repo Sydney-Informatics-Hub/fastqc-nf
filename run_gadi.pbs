@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#PBS -P <project>
+#PBS -N fastqc-nf
+#PBS -l walltime=02:00:00
+#PBS -l ncpus=1
+#PBS -l mem=4GB
+
+# Load required modules
+module load nextflow
+module load singularity
+
+# set singularity cache dir
+export NXF_SINGULARITY_CACHEDIR= #the directory for singularity container
+
+# Define input variables 
+input= #path to your input samplesheet.csv 
+outdir= #path to and the name of your results directory
+gadi_account= #for accounting, access to scratch and gdata
+
+# Run the pipeline (remove annotsv if not needed)
+nextflow run main.nf --input ${input} \
+  --output ${outdir} \
+  -profile gadi \
+  --gadi_account ${gadi_account}
