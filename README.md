@@ -60,7 +60,17 @@ The important features are:
 * `modules/` contains individual process files for each step in the workflow.
 * `config/` contains infrastructure-specific config files (currently only contains gadi.config)
 
-### 2. Make the input samplesheet
+### 2. Set your cache directories 
+
+This workflow pulls FastQC and MultiQC containers to be executed by Singularity. We recommend that you specify a cache directory on your system using `NXF_SINGULARITY_CACHEDIR` in your `~/.bash_profile` or `~/.bashrc` file. This will prevent the containers from being downloaded every time you run the pipeline. If you are running this pipeline on NCI Gadi, provide a path to the `$NXF_SINGULARITY_CACHEDIR` in the `run_gadi.pbs` script before you execute it. 
+
+You can also do this just for your current shell session, e.g.: 
+
+```bash
+export NXF_SINGULARITY_CACHEDIR=/scratch/$PROJECT/$USER/.singularity
+```
+
+### 3. Make the input samplesheet
 
 To run this pipeline you will need the following inputs:
 
@@ -82,7 +92,7 @@ When you run the pipeline, you will use the mandatory `--input` parameter to spe
 --input /path/to/input.tsv
 ```
 
-### 3. Execute the workflow 
+### 4. Execute the workflow 
 
 Execute the workflow using the command below, from inside the `fastqc-nf` directory: 
 
